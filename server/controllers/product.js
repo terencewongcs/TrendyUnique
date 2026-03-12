@@ -16,18 +16,11 @@ const getAllProducts = async (req, res) => {
     if (pageSize <= 0)
       return res.status(400).json({ message: "Invalid page size" });
 
-    // search by name
-    let filter = {};
+    // only in-stock products for public storefront
+    let filter = { quantity: { $gt: 0 } };
     if (search) {
       const regex = new RegExp(search, "i");
-      filter = {
-        $or: [{ name: regex }],
-      };
-    }
-
-    // vendor or customer
-    if (req.user && req.user !== "anonymous" && req.user.role === "Vendor") {
-      filter["owner"] = new mongoose.Types.ObjectId(req.user._id);
+      filter.$or = [{ name: regex }];
     }
 
     const data = await Product.find(filter)
