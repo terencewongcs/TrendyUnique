@@ -4,6 +4,8 @@ require('dotenv').config();
 const authRouter = require('./routers/auth');
 const productRouter = require('./routers/products');
 const cartRouter = require('./routers/carts');
+const orderRouter = require('./routers/orders');
+const vendorRouter = require('./routers/vendor');
 const connectDB = require('./db');
 
 connectDB();
@@ -14,6 +16,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/auth', authRouter);
 app.use('/api/products', productRouter);
 app.use('/api/carts', cartRouter);
+app.use('/api/orders', orderRouter);
+app.use('/api/vendor', vendorRouter);
 
 app.get('/', (req, res) => {
   res.send('Express');
