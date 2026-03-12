@@ -1,0 +1,66 @@
+import { useParams, useNavigate } from 'react-router-dom';
+import { useGlobal } from '../hooks/useGlobal';
+import { getRequest } from '../utils/fetch';
+import { useAppSelector } from '../app/hooks';
+import { useCallback, useEffect, useState } from 'react';
+import { ProductType } from '../utils/type';
+import AddToCart from '../components/AddToCart';
+
+const ProductDetail = () => {
+  const { showLoading, showMessage } = useGlobal();
+  const navigate = useNavigate();
+  const cartItems = useAppSelector((state) => state.cart.carts.items);
+  const id = useParams().id || '';
+  const [product, setProduct] = useState<ProductType | null>(null);
+
+  const load = useCallback(async () => {
+    const data = await getRequest<ProductType>(`/api/products/${id}`);
+    const cartProduct = cartItems.find((t) => t.product._id === data._id);
+    data.cartCount = cartProduct?.quantity || 0;
+    setProduct(data);
+  }, [id, cartItems]);
+
+  useEffect(() => {
+    showLoading(true);
+    load()
+      .catch((e: unknown) => { showMessage(String(e)); })
+      .finally(() => { showLoading(false); });
+  }, [load]);
+
+  if (!product) return <div className="p-8 text-gray">Loading product...</div>;
+
+  return (
+    <div className="w-full h-full px-5 md:px-16 items-center flex flex-col overflow-y-auto pb-7">
+      <div className="w-full md:max-w-7xl my-5 text-center md:text-left">
+        <button className="text-blue text-sm underline mb-2" onClick={() => { navigate('/'); }}>← Back to products</button>
+        <h1 className="text-2xl md:text-4xl font-bold text-black-common">Product detail</h1>
+      </div>
+      <div className="w-full bg-white rounded-lg p-5 md:p-10 flex flex-col md:flex-row md:max-w-7xl">
+        <div className="w-full h-full flex justify-center items-center">
+          <img src={product.image} alt="product" className="w-full md:max-h-[calc(100%-4rem)] object-contain" />
+        </div>
+        <div className="w-full h-full flex flex-col justify-center md:justify-start items-left md:items-start md:mx-8 md:pt-5">
+          <p className="text-sm md:text-base text-gray font-normal mt-2">Category: {product.category}</p>
+          <h2 className="text-xl md:text-4xl font-bold text-gray-text my-1 md:my-2">{product.name}</h2>
+          <div className="flex items-center my-1 md:my-4">
+            <p className="text-xl md:text-[32px]/[44px] font-bold text-black-common">${product.price}</p>
+            {product.quantity === 0 ? (
+              <div className="flex items-center mx-4 bg-[#EA3D2F]/[13%] rounded-md h-[30px]">
+                <p className="text-[10px]/[13.75px] text-red-button font-bold mx-4">Out of stock</p>
+              </div>
+            ) : (
+              <div className="flex items-center mx-4 bg-[#03d833]/[13%] rounded-md h-[30px]">
+                <p className="text-[10px]/[13.75px] text-green-button font-bold mx-4">{product.quantity} in stock</p>
+              </div>
+            )}
+          </div>
+          <p className="text-xs md:text-base text-gray font-normal mt-4 md:mt-2 break-words mb-4">{product.description}</p>
+          <AddToCart productId={product._id} count={product.cartCount}
+            customClass={['bg-blue text-white w-5.9/12', 'bg-blue text-white']} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ProductDetail;
