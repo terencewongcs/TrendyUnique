@@ -36,6 +36,11 @@ const register = async (req, res) => {
         email,
         products: [],
       });
+    } else if (role === "Admin") {
+      instance = new Admin({
+        username,
+        email,
+      });
     } else {
       const cart = new Cart({ items: [], totalPrice: 0 });
       await cart.save();

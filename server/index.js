@@ -6,6 +6,7 @@ const productRouter = require('./routers/products');
 const cartRouter = require('./routers/carts');
 const orderRouter = require('./routers/orders');
 const vendorRouter = require('./routers/vendor');
+const adminRouter = require('./routers/admin');
 const connectDB = require('./db');
 
 connectDB();
@@ -18,6 +19,7 @@ app.use('/api/products', productRouter);
 app.use('/api/carts', cartRouter);
 app.use('/api/orders', orderRouter);
 app.use('/api/vendor', vendorRouter);
+app.use('/api/admin', adminRouter);
 
 app.get('/', (req, res) => {
   res.send('Express');

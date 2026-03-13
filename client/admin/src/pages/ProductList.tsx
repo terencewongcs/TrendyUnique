@@ -15,7 +15,7 @@ const ProductList = () => {
   const [search, setSearch] = useState('');
 
   const load = useCallback(async () => {
-    const url = `/api/vendor/products?pageSize=${pageSize}&page=${currentPage}&search=${search}&sortField=createdAt&sortOrder=-1`;
+    const url = `/api/admin/products?pageSize=${pageSize}&page=${currentPage}&search=${search}&sortField=createdAt&sortOrder=-1`;
     const data: ProductPageType = await getRequest<ProductPageType>(url);
     setProducts(data.data);
     setTotalPage(data.pages);
@@ -32,7 +32,7 @@ const ProductList = () => {
     if (!confirm('Delete this product?')) return;
     showLoading(true);
     try {
-      await deleteRequest(`/api/vendor/products/${id}`);
+      await deleteRequest(`/api/admin/products/${id}`);
       showMessage('Product deleted', 'success');
       await load();
     } catch (e) {
@@ -45,7 +45,7 @@ const ProductList = () => {
   return (
     <div className="max-w-5xl mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-black-common">My Products</h1>
+        <h1 className="text-2xl font-bold text-black-common">All Products</h1>
         <button className="bg-blue text-white rounded text-sm font-semibold py-2 px-5"
           onClick={() => { navigate('/products/add'); }}>
           + Add Product

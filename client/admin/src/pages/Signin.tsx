@@ -18,7 +18,7 @@ const Signin = () => {
   const [pwdErr, setPwdErr] = useState('');
 
   useEffect(() => {
-    if (user.token && user.role === 'Vendor') navigate('/products', { replace: true });
+    if (user.token && user.role === 'Admin') navigate('/products', { replace: true });
   }, []);
 
   const login = async () => {
@@ -32,9 +32,9 @@ const Signin = () => {
     try {
       const info = await dispatch(doLogin({ email, password }));
       showLoading(false);
-      if (info.role !== 'Vendor') {
+      if (info.role !== 'Admin') {
         localStorage.clear();
-        showMessage('This portal is for vendors only');
+        showMessage('This portal is for admins only');
         return;
       }
       navigate('/products');
@@ -47,7 +47,7 @@ const Signin = () => {
   return (
     <div className="w-full h-full flex justify-center items-center bg-gray-bg/20">
       <div className="bg-white shadow rounded w-11/12 max-w-md flex flex-col items-center px-9 py-10">
-        <h2 className="text-black-common text-2xl md:text-3xl font-bold pb-8 text-center">Vendor Sign In</h2>
+        <h2 className="text-black-common text-2xl md:text-3xl font-bold pb-8 text-center">Admin Sign In</h2>
         <div className="flex flex-col w-full">
           <label className="text-base font-normal text-gray">Email</label>
           <input className="h-12 border border-solid border-gray-border rounded px-1.5 outline-0"

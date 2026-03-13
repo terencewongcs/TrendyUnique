@@ -19,9 +19,9 @@ const ProductFormPage = () => {
     try {
       let data: ResType;
       if (isEdit && id) {
-        data = await patchRequest<ResType>(`/api/vendor/products/${id}`, params);
+        data = await patchRequest<ResType>(`/api/admin/products/${id}`, params);
       } else {
-        data = await postRequest<ResType>('/api/vendor/products', params);
+        data = await postRequest<ResType>('/api/admin/products', params);
       }
       showMessage(data.message, 'success');
       showLoading(false);

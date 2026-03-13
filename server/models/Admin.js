@@ -10,11 +10,6 @@ const adminSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  cart: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Cart',
-    required: true
-  },
 });
 
 const Admin = mongoose.model('Admin', adminSchema);
